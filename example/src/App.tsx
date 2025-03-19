@@ -1,5 +1,5 @@
 import React from 'react'
-import { Img, Source } from 'uhrp-react'
+import { Img, Source } from '@bsv/uhrp-react'
 import './App.css'
 
 const App: React.FC = () => {

@@ -9,15 +9,16 @@ The Universal Hash Resolution Protocol (UHRP) allows content to be addressed by 
 ## Installation
 
 ```
-npm i uhrp-react
+npm i @bsv/uhrp-react
 ```
 
 ## Usage
+
 In your React project:
 
 ```tsx
 import React from 'react'
-import { Img, Source } from 'uhrp-react'
+import { Img, Source } from '@bsv/uhrp-react'
 
 const App = () => (
   <div>
@@ -25,20 +26,20 @@ const App = () => (
 
     <div>
       <h2>Image Preview</h2>
-      <Img src='XUT4UwibmJijUorRuhdceFhVXvpzZYfusvC6umGFHWrCxsfBK8Eq' />
+      <Img src='XUUVZqvzYskUvVfBZsrqXsvyoAUojQcJxDr6hTUwEz1vPLdvc64z' />
     </div>
 
     <div>
       <h2>Video Preview</h2>
       <video controls>
-        <Source src='XUSy2EHiJqRxcB3frZbfQ7J1kEe1sE8x2vB6cfUr1A6rry2AeTZX' />
+        <Source src='XUTEGfCykZ4E8oJhT98keoPTg2Q28Nq4sJJXLf9CYA5CjV7ZsTCV' />
       </video>
     </div>
 
     <div>
       <h2>Image with Loading State</h2>
       <Img
-        src='XUT4UwibmJijUorRuhdceFhVXvpzZYfusvC6umGFHWrCxsfBK8Eq'
+        src='XUUVZqvzYskUvVfBZsrqXsvyoAUojQcJxDr6hTUwEz1vPLdvc64z'
         loading={<div>Loading...</div>}
       />
     </div>
@@ -47,6 +48,7 @@ const App = () => (
 
 export default App
 ```
+
 ## Props
 
 src (required) – The UHRP address of the media.
@@ -57,6 +59,10 @@ Any additional props will be passed directly to the rendered <img> or <source> e
 
 The uhrp-react library automatically resolves UHRP URLs to HTTP URLs using the UHRP Storage Server in the background. This provides seamless integration with your React application.
 
-## License
-The license for the code in this repository is the Open BSV License.
+## Example
 
+Check the [example directory of the repo](./example) for a simple React Scripts project utilizing these components.
+
+## License
+
+The license for the code in this repository is the Open BSV License.
