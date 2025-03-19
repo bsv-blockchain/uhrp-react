@@ -1,4 +1,4 @@
-# uhrp-react
+# The `@bsv/uhrp-react` Package
 
 UHRP-enabled React components for images, video, and audio.
 
