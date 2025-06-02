@@ -24,7 +24,7 @@
     "postbuild": "echo 'Build complete!'"
   },
   "devDependencies": {
-    "@types/react": "^18.3.1",
+    "@types/react": "^19.1.6",
     "typescript": "^5.8.2"
   },
   "dependencies": {
