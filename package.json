@@ -15,9 +15,15 @@
   "files": [
     "dist/**/*"
   ],
-  "repository": "git+https://github.com/p2ppsr/uhrp-react",
-  "author": "Peer-to-Peer Privacy Systems Research LLC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bsv-blockchain/uhrp-react.git"
+  },
+  "author": "BSV Blockchain Association",
   "license": "Open BSV License",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "tsc",
