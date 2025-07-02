@@ -28,7 +28,7 @@
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "@bsv/sdk": "^1.4.11",
+    "@bsv/sdk": "^1.6.8",
     "zustand": "^4.5.6"
   },
   "engines": {
