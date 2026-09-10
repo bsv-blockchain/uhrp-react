@@ -22,6 +22,9 @@
     "@types/react-dom": "^18.3.1",
     "react-scripts": "^5.0.1"
   },
+  "overrides": {
+    "@bsv/sdk": "^2.5.0"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
