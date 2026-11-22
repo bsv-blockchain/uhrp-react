@@ -4,6 +4,7 @@ import { StorageUtils, StorageDownloader } from '@bsv/sdk'
 
 // Initialize a single downloader instance
 const downloader = new StorageDownloader()
+const pending = new Map<string, Promise<void>>()
 
 interface UrlState {
   urls: Record<string, string>
@@ -26,15 +27,20 @@ export const useStore = create<UrlState>()(
           return
         }
 
-        // Otherwise, resolve the UHRP URL
-        try {
-          const [resolved] = await downloader.resolve(uhrpUrl)
-          set(state => ({
-            urls: { ...state.urls, [uhrpUrl]: resolved }
-          }))
-        } catch (err) {
+        const existing = pending.get(uhrpUrl)
+        if (existing) return existing
+
+        const request = downloader.resolve(uhrpUrl).then(([resolved]) => {
+          if (resolved) {
+            set(state => ({ urls: { ...state.urls, [uhrpUrl]: resolved } }))
+          }
+        }).catch(err => {
           console.error(err)
-        }
+        }).finally(() => {
+          pending.delete(uhrpUrl)
+        })
+        pending.set(uhrpUrl, request)
+        return request
       }
     }),
     {

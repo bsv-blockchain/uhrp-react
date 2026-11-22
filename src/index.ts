@@ -1,2 +1,5 @@
-export { default as Img } from './Img'
-export { default as Source } from './Source'
+import ImgComponent from './Img'
+import SourceComponent from './Source'
+
+export const Img: typeof ImgComponent = ImgComponent
+export const Source: typeof SourceComponent = SourceComponent

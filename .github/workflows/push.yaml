@@ -27,7 +27,7 @@ jobs:
     - name: Verify patched native Node runtime
       run: node -e "const a=require('node:assert/strict'),z=require('node:zlib');a.equal(process.version,'v${{ matrix.node-version }}');a.equal(z.brotliDecompressSync(z.brotliCompressSync(Buffer.from('security'))).toString(),'security');a.equal(require('node:crypto').randomBytes(32).length,32)"
     - run: npm ci
-    - run: npm run build
+    - run: npm test
     - run: npm run lint:ci --if-present
     - run: npm run test:coverage --if-present
     - name: Upload coverage to Codecov
