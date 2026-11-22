@@ -89,3 +89,9 @@ test('renders the SDK-resolved URL from a signed advertisement', async t => {
   assert.equal(image.toJSON().props.alt, 'Catalog badge')
   image.unmount()
 })
+
+test('exposes the same named exports to CommonJS and ESM consumers', async () => {
+  const esm = await import('@bsv/uhrp-react')
+  assert.equal(esm.Img, Img)
+  assert.equal(esm.Source, Source)
+})
