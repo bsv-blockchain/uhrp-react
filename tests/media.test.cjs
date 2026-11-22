@@ -2,7 +2,10 @@ const assert = require('node:assert/strict')
 const { test } = require('node:test')
 const React = require('react')
 const { create, act } = require('react-test-renderer')
-const { StorageDownloader, StorageUtils } = require('@bsv/sdk')
+const {
+  LookupResolver, PrivateKey, ProtoWallet, PushDrop, StorageDownloader,
+  StorageUtils, Transaction, Utils
+} = require('@bsv/sdk')
 
 const storage = new Map()
 Object.defineProperty(globalThis, 'sessionStorage', {
@@ -59,4 +62,30 @@ test('shows fallbacks, retries unavailable UHRP content and shares each lookup',
   assert.equal(JSON.parse(storage.get('uhrp-react-session')).state.urls[src], resolved)
   image.unmount()
   source.unmount()
+})
+
+test('renders the SDK-resolved URL from a signed advertisement', async t => {
+  const contentHash = Array.from({ length: 32 }, (_, i) => i)
+  const src = StorageUtils.getURLForHash(contentHash)
+  const advertisedUrl = 'https://cdn.example/signed-content.png'
+  const wallet = new ProtoWallet(new PrivateKey(11))
+  const { publicKey } = await wallet.getPublicKey({ identityKey: true })
+  const compactSize = value => new Utils.Writer().writeVarIntNum(value).toArray()
+  const lockingScript = await new PushDrop(wallet).lock([
+    Utils.toArray(publicKey, 'hex'), contentHash, Utils.toArray(advertisedUrl, 'utf8'),
+    compactSize(Math.floor(Date.now() / 1000) + 600), compactSize(29)
+  ], [2, 'uhrp advertisement'], '1', 'anyone', true)
+  const transaction = new Transaction()
+  transaction.addOutput({ satoshis: 1, lockingScript })
+  const lookup = t.mock.method(LookupResolver.prototype, 'query', async ({ service, query }) => {
+    assert.equal(service, 'ls_uhrp')
+    assert.equal(StorageUtils.normalizeURL(query.uhrpUrl), StorageUtils.normalizeURL(src))
+    return { type: 'output-list', outputs: [{ beef: transaction.toBEEF(), outputIndex: 0 }] }
+  })
+  let image
+  await act(async () => { image = create(React.createElement(Img, { src, alt: 'Catalog badge' })) })
+  assert.equal(lookup.mock.callCount(), 1)
+  assert.equal(image.toJSON().props.src, advertisedUrl)
+  assert.equal(image.toJSON().props.alt, 'Catalog badge')
+  image.unmount()
 })

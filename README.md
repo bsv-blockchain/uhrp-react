@@ -2,66 +2,68 @@
 
 UHRP-enabled React components for images, video, and audio.
 
-# Background
+## Install
 
-The Universal Hash Resolution Protocol (UHRP) allows content to be addressed by its SHA256 hash, enabling efficient content storage and retrieval. This eliminates the need to store large media files directly on the blockchain, significantly reducing costs.
+Use React 18 or later and Node.js 22 or later to build your app.
 
-## Installation
-
-```
-npm i @bsv/uhrp-react
+```sh
+npm install @bsv/uhrp-react
 ```
 
-## Usage
+## Display an image or media source
 
-In your React project:
+Pass a UHRP address to resolve media through the SDK. You can also pass an HTTPS
+URL. The example uses a regular HTTPS poster and a UHRP video address supplied by
+the app.
 
 ```tsx
-import React from 'react'
 import { Img, Source } from '@bsv/uhrp-react'
 
-const App = () => (
-  <div>
-    <h1>UHRP Media Showcase</h1>
+type LessonMediaProps = {
+  posterUrl: string
+  videoUhrpUrl: string
+}
 
-    <div>
-      <h2>Image Preview</h2>
-      <Img src='XUUVZqvzYskUvVfBZsrqXsvyoAUojQcJxDr6hTUwEz1vPLdvc64z' />
-    </div>
-
-    <div>
-      <h2>Video Preview</h2>
-      <video controls>
-        <Source src='XUTEGfCykZ4E8oJhT98keoPTg2Q28Nq4sJJXLf9CYA5CjV7ZsTCV' />
-      </video>
-    </div>
-
-    <div>
-      <h2>Image with Loading State</h2>
+export function LessonMedia({ posterUrl, videoUhrpUrl }: LessonMediaProps) {
+  return (
+    <section aria-label="Wallet tutorial">
       <Img
-        src='XUUVZqvzYskUvVfBZsrqXsvyoAUojQcJxDr6hTUwEz1vPLdvc64z'
-        loading={<div>Loading...</div>}
+        src={posterUrl}
+        alt="Wallet tutorial cover"
+        width={640}
+        height={360}
+        fallback={<span role="status">Loading the cover…</span>}
       />
-    </div>
-  </div>
-)
-
-export default App
+      <video controls preload="none" aria-label="Wallet tutorial">
+        <Source src={videoUhrpUrl} type="video/mp4" />
+        Your browser does not support video playback.
+      </video>
+    </section>
+  )
+}
 ```
 
-## Props
+| Component | Loading prop | Native attributes |
+| --- | --- | --- |
+| `Img` | `fallback` | Image attributes such as `alt`, `width`, and `loading="lazy"` |
+| `Source` | `loading` | Source attributes such as `type` and `media` |
 
-src (required) – The UHRP address of the media.
-loading (optional) – A React element to display while the media is being resolved.
-Any additional props will be passed directly to the rendered <img> or <source> element for greater flexibility.
+Supply the same `src` to components that should share lookup results. Resolved
+URLs are cached for the browser session. A missing or failed lookup can be tried
+again when the component remounts. A media element may need `.load()` when its
+sources change after playback has started. Keep loading messages outside the
+`video` and `audio` elements when they should be visible.
 
-## How It Works
+## URL resolution and content integrity
 
-The uhrp-react library automatically resolves UHRP URLs to HTTP URLs using the UHRP Storage Server in the background. This provides seamless integration with your React application.
+The SDK authenticates UHRP advertisements and resolves eligible HTTPS URLs. The
+browser loads the displayed bytes from the chosen URL. Use the SDK's
+`StorageDownloader.download()` when your application needs to verify the hash
+of the downloaded bytes.
 
-## Example
-
-Check the [example directory of the repo](./example) for a simple React Scripts project utilizing these components.
+Run `npm test` to build the package and exercise fallback rendering, shared
+lookups, retry, session persistence, and signed advertisement resolution. The
+tests use local fixtures. See the [example app](./example) for a browser demo.
 
 ## License
 
